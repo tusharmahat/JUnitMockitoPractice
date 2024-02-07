@@ -36,30 +36,27 @@ class ApplicationTests {
 	// test userService getAll
 	@Test
 	public void getUsersTest() {
-		// Arrange: Set up mock behavior
+		//when(<mockmethod>).thenReturn(<return mock value>);
 		when(userRepo.findAll()).thenReturn(Stream
 				.of(new User(1, "tushar", "12345"), new User(2, "tushar", "12345"), new User(2, "tushar", "12345"))
 				.toList());
-
-		// Act: Invoke the method under test
 		List<UserDetailsDTO> users = userService.getAll();
 
-		// Assert: Verify the outcome
-		assertEquals(3, users.size()); // Check if the correct number of users is returned
+		//assertEquals(<Expected value>,<mockMethod>)
+		assertEquals(3, users.size());
 
 	}
 
 	@Test
 	public void getUserTest() throws Exception {
-		// Arrange: Set up mock behavior
-
+		//when(<mockmethod>).thenReturn(<return mock value>);
 		when(userRepo.findById(1)).thenReturn(Optional.of(new User(1, "tushar", "12345")));
 
-		// Act: Invoke the method under test
+		//call the mock the method
 		UserDetailsDTO user = userService.get(1);
 
-		// Assert: Verify the outcome
-		assertEquals("tushar", user.getUsername()); // Check if the correct number of users is returned
+		//assertEquals(<Expected value>,<mockMethod>)
+		assertEquals("tushar", user.getUsername());
 
 	}
 
@@ -69,18 +66,26 @@ class ApplicationTests {
 		User user = new User(2, "tushar", "12345");
 		UserRegisterDTO uDTO = new UserRegisterDTO();
 		BeanUtils.copyProperties(user, uDTO);
+		
+		//when(<mockmethod>).thenReturn(<return mock value>);
 		when(userRepo.save(user)).thenReturn(user);
+		
+		//assertEquals(<Expected value>,<mockMethod>)
 		assertEquals("Saved User successfully", userService.create(uDTO));
 
 	}
 
 	@Test
 	public void deleteTest() throws Exception {
-		// Arrange: Set up mock behavior
 		User user = new User(1, "tushar", "12345");
+		
+		//when(<mockmethod>).thenReturn(<return mock value>);
 		when(userRepo.findById(user.getId())).thenReturn(Optional.of(user));
+		
 		userService.delete(user.getId());
 
+		//this is for void return method
+		//verify(<mockItem>, <times to mock>).<method to mock>
 		verify(userRepo, times(1)).deleteById(user.getId());
 
 	}
