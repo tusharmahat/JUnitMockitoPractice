@@ -1,0 +1,47 @@
+package com.tushar.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.tushar.dto.UserDetailsDTO;
+import com.tushar.dto.UserRegisterDTO;
+import com.tushar.entity.User;
+import com.tushar.repo.UserRepo;
+import com.tushar.service.UserService;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	@Autowired
+	private UserRepo userRepo;
+
+	@Override
+	public List<UserDetailsDTO> getAll() {
+		List<User> users = userRepo.findAll();
+		List<UserDetailsDTO> usersDetails = new ArrayList<>();
+		users.forEach(u -> {
+			UserDetailsDTO uDTO = new UserDetailsDTO();
+			BeanUtils.copyProperties(u, uDTO);
+			usersDetails.add(uDTO);
+
+		});
+		return usersDetails;
+	}
+
+	@Override
+	public String create(UserRegisterDTO userDto) {
+		User newUser = new User();
+		BeanUtils.copyProperties(userDto, newUser);
+		System.out.println(userDto.getUsername());
+		User savedUser = userRepo.save(newUser);
+		if (savedUser != null) {
+			return "Saved User successfully";
+		}
+		return "Could not save User";
+	}
+
+}
