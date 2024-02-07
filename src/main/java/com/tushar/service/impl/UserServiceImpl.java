@@ -44,4 +44,25 @@ public class UserServiceImpl implements UserService {
 		return "Could not save User";
 	}
 
+	@Override
+	public UserDetailsDTO get(int id) throws Exception {
+		User existingUser = userRepo.findById(id).orElseThrow(() -> new Exception("User not found"));
+		UserDetailsDTO userDto = new UserDetailsDTO();
+		BeanUtils.copyProperties(existingUser, userDto);
+		return userDto;
+	}
+
+	@Override
+	public String delete(int id) throws Exception {
+		userRepo.findById(id).orElseThrow(() -> new Exception("User not found"));
+		userRepo.deleteById(id);
+		return "Deleted";
+	}
+
+	@Override
+	public String update(UserRegisterDTO userDto, int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
